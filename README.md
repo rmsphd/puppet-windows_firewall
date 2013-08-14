@@ -3,7 +3,7 @@
 #Overview
 Puppet module to manage the Microsoft Windows Firewall
 
-This module is also available on the [Puppet Forge](https://forge.puppetlabs.com/liamjbennett/windows_firewall)
+This module is also available on the [Puppet Forge](https://forge.puppetlabs.com/rmsphd/windows_firewall)
 
 [![Build
 Status](https://secure.travis-ci.org/liamjbennett/puppet-windows_firewall.png)](http://travis-ci.org/liamjbennett/puppet-windows_firewall)
@@ -57,6 +57,9 @@ Further contributions and testing reports are extremely welcome - please submit 
 Please read the [Wiki](https://github.com/liamjbennett/puppet-windows_firewall/wiki) as there is a lot of useful information and links that will help you understand this module <br/>
 
 ##Release Notes
+
+__0.0.3__ <br/>
+Removed dependence win_facts and support for Windows XP/2003
 
 __0.0.2__ <br/>
 Some bug fixes and additional testing

@@ -62,14 +62,7 @@ define windows_firewall::exception(
     # Check if we're allowing a program or port/protocol and validate accordingly
     if $program == undef {
       #check whether to use 'localport', or just 'port' depending on OS
-      case $::operatingsystemversion {
-        /Windows Server 2003/, /Windows XP/: {
-          $port_param = 'port'
-        }
-        default: {
-          $port_param = 'localport'
-        }
-      }
+      $port_param = 'localport'
       $fw_command = 'portopening'
       $allow_context = "protocol=${protocol} ${port_param}=${local_port}"
       validate_re($protocol,['^(TCP|UDP)$'])
@@ -86,14 +79,9 @@ define windows_firewall::exception(
     validate_re($enabled,['^(yes|no)$'])
     validate_slength($key_name,255)
 
-    case $::operatingsystemversion {
-      'Windows Server 2012', 'Windows Server 2008', 'Windows Server 2008 R2', 'Windows Vista','Windows 7','Windows 8': {
-        validate_slength($description,255)
-        validate_re($direction,['^(in|out)$'])
-        validate_re($action,['^(allow|block)$'])
-      }
-      default: { }
-    }
+	validate_slength($description,255)
+	validate_re($direction,['^(in|out)$'])
+	validate_re($action,['^(allow|block)$'])
 
     # Set command to check for existing rules
     $check_rule_existance= "C:\\Windows\\System32\\netsh.exe advfirewall firewall show rule name=\"${display_name}\""
@@ -110,19 +98,7 @@ define windows_firewall::exception(
         $unless = undef
     }
 
-
-    case $::operatingsystemversion {
-      /Windows Server 2003/, /Windows XP/: {
-        $mode = $enabled ? {
-          'yes' => 'ENABLE',
-          'no'  => 'DISABLE',
-        }
-        $netsh_command = "C:\\Windows\\System32\\netsh.exe firewall ${fw_action} ${fw_command} name=\"${display_name}\" mode=${mode} ${allow_context}"
-      }
-      default: {
-        $netsh_command = "C:\\Windows\\System32\\netsh.exe advfirewall firewall ${fw_action} rule name=\"${display_name}\" description=\"${description}\" dir=${direction} action=${action} enable=${enabled} ${allow_context}"
-      }
-    }
+    $netsh_command = "C:\\Windows\\System32\\netsh.exe advfirewall firewall ${fw_action} rule name=\"${display_name}\" description=\"${description}\" dir=${direction} action=${action} enable=${enabled} ${allow_context}"
 
     exec { "set rule ${display_name}":
       command  => $netsh_command,
